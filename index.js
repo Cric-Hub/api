@@ -1,34 +1,33 @@
 import express from "express";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import { connectDB } from "./config/db.js";
 import authRoute from "./routes/auth.js";
 import usersRoute from "./routes/users.js";
-import cookieParser from "cookie-parser";
+import matchesRoute from "./routes/match.js";
+import clubsRoute from "./routes/club.js";
+import playersRoute from "./routes/player.js";
+
 
 const app = express();
-
 dotenv.config();
-
-const connect = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO);
-        console.log("connected to mongoDB");
-    } catch (error) {
-        throw error;
-    }
-}
-
-mongoose.connection.on("disconnected", () => {
-    console.log("mongoDB disconnected");
-})
 
 //middlewares
 app.use(cookieParser());
 app.use(express.json());
+app.use(cors({
+    origin: ["http://localhost:3000","http://localhost:3001"],
+    credentials: true,
+}));
 
-app.use('/Backend/auth', authRoute);
-app.use('/Backend/users', usersRoute);
+app.use('/api/auth', authRoute);
+app.use('/api/users', usersRoute);
+app.use('/api/matches', matchesRoute);
+app.use('/api/clubs', clubsRoute);
+app.use('/api/players', playersRoute);
 
+// Error Handling
 app.use((err, req, res, next) => {
     const errorStatus = err.status || 500;
     const errorMessage = err.message || "Something went wrong !";
@@ -40,8 +39,8 @@ app.use((err, req, res, next) => {
     })
 })
 
-
+// Start Server
 app.listen(8000, () => {
-    connect();
-    console.log("connected to backend !");
-})
+    connectDB();
+    console.log("Connected to backend!");
+});
