@@ -1,8 +1,9 @@
 import express from "express";
-import { createMatch, updateMatch, deleteMatch, getMatch, getMatches } from "../controllers/match.js";
+import { createMatch, updateMatch, deleteMatch, getMatch, getMatches,getMatchesByClub } from "../controllers/match.js";
 
 const router = express.Router();
 
+router.get("/by-club/:clubId", getMatchesByClub);
 router.post("/", createMatch);        // Create a match
 router.put("/:id", updateMatch);     // Update a match
 router.delete("/:id", deleteMatch);  // Delete a match

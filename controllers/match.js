@@ -45,3 +45,23 @@ export const getMatches = async (req, res, next) => {
         next(err);
     }
 };
+
+// Get matches by club
+export const getMatchesByClub = async (req, res, next) => {
+    const { clubId } = req.params; // Extract clubId from request params
+
+    try {
+        // Query to find matches where the club appears in either club1 or club2
+        const matches = await Match.find({
+            $or: [
+                { "club1.club": clubId }, // Club appears as club1
+                { "club2.club": clubId }  // Club appears as club2
+            ]
+        }).populate("club1.club club2.club") // Populate club details if needed
+          .populate("club1.players club2.players"); // Optionally populate players
+
+        res.status(200).json(matches); // Return matches in response
+    } catch (err) {
+        next(err); // Pass error to error-handling middleware
+    }
+};

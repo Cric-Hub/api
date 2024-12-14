@@ -26,6 +26,7 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    club: { type: mongoose.Schema.Types.ObjectId, ref: "Club" }
 },
 {
     timestamps: true,
