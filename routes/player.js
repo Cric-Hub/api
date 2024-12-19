@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/", createPlayer);
 
 // Get players by club ID (using query parameter)
-router.get("/by-club", getPlayersByClub);
+router.get('/by-club/:clubId', getPlayersByClub);
 
 // Update an existing player by ID
 router.put("/:id", updatePlayer);

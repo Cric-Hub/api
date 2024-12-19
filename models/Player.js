@@ -12,16 +12,26 @@ const PlayerSchema = new Schema(
       type: Object,
       default: {
         matches: 0,
+        innings: 0,
         runs: 0,
-        strikeRate: 0, // Use a float to capture more precise data
+        ballsFaced: 0,
+        highestScore: 0,
+        notOuts: 0,
+        average: 0, 
+        strikeRate: 0, 
       },
     },
     bowling: {
       type: Object,
       default: {
         matches: 0,
+        innings: 0,
+        ballsBowled: 0,
+        runsConceded: 0,
         wickets: 0,
-        economy: 0, // Use a float for economy rates
+        economy: 0, 
+        average: 0, 
+        strikeRate: 0, 
       },
     },
     fielding: {
@@ -29,15 +39,16 @@ const PlayerSchema = new Schema(
       default: {
         matches: 0,
         catches: 0,
-        runOuts: 0, // Added consistent camelCase for naming
+        runOuts: 0,
+        stumpings: 0,
       },
     },
-    club: { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: "Club" // Reference to Club model
+    club: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Club",
     },
   },
-  { timestamps: true } // Automatically adds createdAt and updatedAt fields
+  { timestamps: true }
 );
 
 export default mongoose.model("Player", PlayerSchema);
