@@ -26,14 +26,6 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    resetPasswordToken: {
-        type: String, 
-        default: null,
-    },
-    resetPasswordExpires: {
-        type: Date, 
-        default: null,
-    },
     club: { type: mongoose.Schema.Types.ObjectId, ref: "Club" }
 },
 {
