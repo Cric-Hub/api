@@ -26,10 +26,6 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    resetToken: {
-        type: String,
-        default: null,
-    },
     club: { type: mongoose.Schema.Types.ObjectId, ref: "Club" }
 },
 {
