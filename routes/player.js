@@ -4,7 +4,8 @@ import { createPlayer,
         deletePlayer, 
         getPlayer, 
         getPlayers, 
-        getPlayersByClub 
+        getPlayersByClub ,
+        filterPlayers
     } from "../controllers/player.js";
 
 const router = express.Router();
@@ -26,6 +27,8 @@ router.get("/:id", getPlayer);
 
 // Get all players
 router.get("/", getPlayers);
+
+router.get('/filter', filterPlayers);
 
 
 

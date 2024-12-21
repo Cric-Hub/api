@@ -182,3 +182,35 @@ export const getPlayersByClub = async (req, res, next) => {
         next(err); // Pass error to middleware
     }
 };
+
+export const filterPlayers = async (req, res) => {
+    const {
+        name,
+        minRuns,
+        maxRuns,
+        minBattingAvg,
+        maxBattingAvg,
+        minBowlingAvg,
+        maxBowlingAvg,
+    } = req.query;
+
+    const query = {};
+
+    if (name) query.name = { $regex: name, $options: "i" };
+    if (minRuns || maxRuns) query['batting.runs'] = {};
+    if (minRuns) query['batting.runs'].$gte = parseInt(minRuns);
+    if (maxRuns) query['batting.runs'].$lte = parseInt(maxRuns);
+    if (minBattingAvg || maxBattingAvg) query['batting.average'] = {};
+    if (minBattingAvg) query['batting.average'].$gte = parseFloat(minBattingAvg);
+    if (maxBattingAvg) query['batting.average'].$lte = parseFloat(maxBattingAvg);
+    if (minBowlingAvg || maxBowlingAvg) query['bowling.average'] = {};
+    if (minBowlingAvg) query['bowling.average'].$gte = parseFloat(minBowlingAvg);
+    if (maxBowlingAvg) query['bowling.average'].$lte = parseFloat(maxBowlingAvg);
+
+    try {
+        const players = await Player.find(query);
+        res.json(players);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
