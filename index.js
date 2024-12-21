@@ -8,6 +8,7 @@ import usersRoute from "./routes/users.js";
 import matchesRoute from "./routes/match.js";
 import clubsRoute from "./routes/club.js";
 import playersRoute from "./routes/player.js";
+import newsRoute from "./routes/news.js";
 
 
 const app = express();
@@ -26,6 +27,7 @@ app.use('/api/users', usersRoute);
 app.use('/api/matches', matchesRoute);
 app.use('/api/clubs', clubsRoute);
 app.use('/api/players', playersRoute);
+app.use('/api/news', newsRoute);
 
 // Error Handling
 app.use((err, req, res, next) => {
