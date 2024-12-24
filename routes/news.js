@@ -6,13 +6,14 @@ import {
   updateNews,
   deleteNews,
 } from "../controllers/news.js";
+import { verifyToken, verifyAdmin, verifyUser } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
-router.post("/", createNews); // Create news
+router.post("/",verifyAdmin, createNews); // Create news
 router.get("/", getAllNews); // Get all news
 router.get("/:id", getNewsById); // Get news by ID
-router.put("/:id", updateNews); // Update news
-router.delete("/:id", deleteNews); // Delete news
+router.put("/:id",verifyAdmin, updateNews); // Update news
+router.delete("/:id",verifyAdmin, deleteNews); // Delete news
 
 export default router;

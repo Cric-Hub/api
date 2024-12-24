@@ -15,12 +15,14 @@ const app = express();
 dotenv.config();
 
 //middlewares
-app.use(cookieParser());
-app.use(express.json());
+
+
 app.use(cors({
-    origin: ["http://localhost:3000","http://localhost:3001"],
+    origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
     credentials: true,
 }));
+app.use(cookieParser());
+app.use(express.json());
 
 app.use('/api/auth', authRoute);
 app.use('/api/users', usersRoute);
@@ -45,4 +47,6 @@ app.use((err, req, res, next) => {
 app.listen(8000, () => {
     connectDB();
     console.log("Connected to backend!");
+    console.log("TEST_VARIABLE:", process.env.TEST_VARIABLE);
+
 });
