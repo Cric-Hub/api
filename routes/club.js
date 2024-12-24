@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/", verifyAdmin,createClub);
 router.put("/:id",verifyUser, updateClub);
 router.delete("/:id",verifyAdmin, deleteClub);
-router.get("/:id",verifyUser, getClub);
+router.get("/:id", getClub);
 router.get("/", getClubs);
 
 export default router;
