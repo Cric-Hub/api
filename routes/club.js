@@ -1,12 +1,13 @@
 import express from "express";
 import { createClub, updateClub, deleteClub, getClub, getClubs } from "../controllers/club.js";
+import { verifyAdmin, verifyUser, verifyToken } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
-router.post("/", createClub);
-router.put("/:id", updateClub);
-router.delete("/:id", deleteClub);
-router.get("/:id", getClub);
+router.post("/", verifyAdmin,createClub);
+router.put("/:id",verifyUser, updateClub);
+router.delete("/:id",verifyAdmin, deleteClub);
+router.get("/:id",verifyUser, getClub);
 router.get("/", getClubs);
 
 export default router;
