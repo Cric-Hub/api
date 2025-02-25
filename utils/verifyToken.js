@@ -36,3 +36,41 @@ export const verifyAdmin = (req, res, next) => {
         return next(createError(403, "You are not authorized"));
     });
 };
+
+
+export const verifyClubAdmin = async (req, res, next) => {
+    try {
+        const clubId = req.params.club || req.body.club|| req.query.clubId;
+        console.log(clubId);
+        
+        // Find the club associated with the admin
+        const adminClub = await Club.findOne({ _id: req.user.club });
+
+        if (!adminClub) {
+            return next(createError(404, "Your assigned club does not exist"));
+        }
+
+        // Check if the requested club matches the admin's club
+        if (adminClub._id.toString() !== clubId) {
+            return next(createError(403, "You are not authorized to manage this club"));
+        }
+
+        // If the club matches, proceed
+        next();
+    } catch (err) {
+        return next(createError(500, "Internal Server Error"));
+    }
+};
+
+
+
+export const verifyNewAdmin = (req, res, next) => {
+    verifyToken(req, res, (err) => {
+        if (err) return next(err); // Handle error from verifyToken
+        const clubId = req.params.club || req.body.club|| req.query.clubId;
+        if (req.user && req.user.isAdmin) {
+            return next();
+        }
+        return next(createError(403, "You are not authorized"));
+    });
+};
