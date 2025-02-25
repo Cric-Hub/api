@@ -39,12 +39,14 @@ export const getMatch = async (req, res, next) => {
 
 export const getMatches = async (req, res, next) => {
     try {
-        const matches = await Match.find();
+        const limit = parseInt(req.query.limit) || 100; 
+        const matches = await Match.find().limit(limit);
         res.status(200).json(matches);
     } catch (err) {
         next(err);
     }
 };
+
 
 // Get matches by club
 export const getMatchesByClub = async (req, res, next) => {

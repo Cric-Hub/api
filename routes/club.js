@@ -1,6 +1,6 @@
 import express from "express";
 import { createClub, updateClub, deleteClub, getClub, getClubs } from "../controllers/club.js";
-import { verifyAdmin, verifyUser, verifyToken } from "../utils/verifyToken.js";
+import { verifyAdmin, verifyUser } from "../utils/verifyToken.js";
 
 const router = express.Router();
 

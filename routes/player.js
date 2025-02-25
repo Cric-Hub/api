@@ -7,15 +7,15 @@ import { createPlayer,
         getPlayersByClub ,
         filterPlayers
     } from "../controllers/player.js";
-import { verifyToken, verifyAdmin, verifyUser } from "../utils/verifyToken.js";
+import { verifyUser,verifyClubAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
 // Create a new player
-router.post("/", verifyUser,createPlayer);
+router.post("/", verifyClubAdmin,createPlayer);
 
 // Get players by club ID (using query parameter)
-router.get('/by-club/:clubId',verifyUser, getPlayersByClub);
+router.get('/by-club/:clubId', getPlayersByClub);
 
 // Update an existing player by ID
 router.put("/:id",verifyUser, updatePlayer);
