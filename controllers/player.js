@@ -60,7 +60,13 @@ export const createPlayer = async (req, res, next) => {
         // Create the new player data with calculations
         const newPlayerData = {
             name: req.body.name || "Unknown Player",
-            club: req.body.club || null, 
+            club: req.body.club || null,
+            img:  req.body.img,
+            dob: req.body.dob,
+            bio: req.body.bio,
+            battingStyle: req.body.battingstyle,
+            bowlingStyle: req.body.bowlingstyle,
+            role: req.body.role,
             batting: {
                 ...battingData,
                 average: parseFloat(battingAverage.toFixed(2)), 

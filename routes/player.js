@@ -12,7 +12,7 @@ import { verifyUser,verifyClubAdmin } from "../utils/verifyToken.js";
 const router = express.Router();
 
 // Create a new player
-router.post("/", verifyClubAdmin,createPlayer);
+router.post("/", createPlayer);
 
 // Get players by club ID (using query parameter)
 router.get('/by-club/:clubId', getPlayersByClub);

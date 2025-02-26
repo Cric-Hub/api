@@ -7,6 +7,26 @@ const PlayerSchema = new Schema(
     name: {
       type: String,
       required: true,
+    }, dob: {
+      type: Date,
+      required: true,
+    },
+    bio: {
+      type: String,
+      default: "",
+    },
+    role: {
+      type: String,
+      enum: ["Batsman", "Bowler", "All-rounder", "Wicketkeeper"],
+      required: true,
+    },
+    battingStyle: {
+      type: String,
+      default: "",
+    },
+    bowlingStyle: {
+      type: String,
+      default: "",
     },
     batting: {
       type: Object,
@@ -46,6 +66,9 @@ const PlayerSchema = new Schema(
     club: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Club",
+    },
+    img: {
+      type: String,
     },
   },
   { timestamps: true }
