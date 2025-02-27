@@ -9,6 +9,9 @@ import matchesRoute from "./routes/match.js";
 import clubsRoute from "./routes/club.js";
 import playersRoute from "./routes/player.js";
 import newsRoute from "./routes/news.js";
+import rankingRoute from "./routes/ranking.js";
+import cron from "node-cron";
+import calculateRankings from "./utils/ranking.js";
 
 
 const app = express();
@@ -30,6 +33,7 @@ app.use('/api/matches', matchesRoute);
 app.use('/api/clubs', clubsRoute);
 app.use('/api/players', playersRoute);
 app.use('/api/news', newsRoute);
+app.use('/api/ranking', rankingRoute);
 
 // Error Handling
 app.use((err, req, res, next) => {
@@ -42,6 +46,15 @@ app.use((err, req, res, next) => {
         stack: err.stack
     })
 })
+
+cron.schedule("0 0 * * *", async () => {
+    try {
+        await calculateRankings();
+        console.log("Rankings updated successfully");
+    } catch (err) {
+        console.error("Error updating rankings:", err);
+    }
+});
 
 // Start Server
 app.listen(8000, () => {

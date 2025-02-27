@@ -7,7 +7,8 @@ const PlayerSchema = new Schema(
     name: {
       type: String,
       required: true,
-    }, dob: {
+    },
+    dob: {
       type: Date,
       required: true,
     },
@@ -37,8 +38,8 @@ const PlayerSchema = new Schema(
         ballsFaced: 0,
         highestScore: 0,
         notOuts: 0,
-        average: 0, 
-        strikeRate: 0, 
+        average: 0,
+        strikeRate: 0,
       },
     },
     bowling: {
@@ -49,9 +50,9 @@ const PlayerSchema = new Schema(
         ballsBowled: 0,
         runsConceded: 0,
         wickets: 0,
-        economy: 0, 
-        average: 0, 
-        strikeRate: 0, 
+        economy: 0,
+        average: 0,
+        strikeRate: 0,
       },
     },
     fielding: {
@@ -62,6 +63,18 @@ const PlayerSchema = new Schema(
         runOuts: 0,
         stumpings: 0,
       },
+    },
+    battingRank: {
+      type: Number,
+      default: 0, // Batting rank (top-level)
+    },
+    bowlingRank: {
+      type: Number,
+      default: 0, // Bowling rank (top-level)
+    },
+    allRounderRank: {
+      type: Number,
+      default: 0, // All-rounder rank (top-level)
     },
     club: {
       type: mongoose.Schema.Types.ObjectId,
