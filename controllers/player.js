@@ -2,7 +2,7 @@ import Player from "../models/Player.js";
 
 export const createPlayer = async (req, res, next) => {
     try {
-        // Extract batting and bowling data or set default empty objects
+        // Extract batting, bowling, and fielding data or set default empty objects
         const batting = req.body.batting || {};
         const bowling = req.body.bowling || {};
         const fielding = req.body.fielding || {};
@@ -15,6 +15,8 @@ export const createPlayer = async (req, res, next) => {
             ballsFaced: batting.ballsFaced || 0,
             highestScore: batting.highestScore || 0,
             notOuts: batting.notOuts || 0,
+            average: 0, // Will be calculated
+            strikeRate: 0, // Will be calculated
         };
 
         const bowlingData = {
@@ -24,6 +26,9 @@ export const createPlayer = async (req, res, next) => {
             ballsBowled: bowling.ballsBowled || 0,
             runsConceded: bowling.runsConceded || 0,
             wickets: bowling.wickets || 0,
+            economy: 0, // Will be calculated
+            average: 0, // Will be calculated
+            strikeRate: 0, // Will be calculated
         };
 
         const fieldingData = {
@@ -61,7 +66,7 @@ export const createPlayer = async (req, res, next) => {
         const newPlayerData = {
             name: req.body.name || "Unknown Player",
             club: req.body.club || null,
-            img:  req.body.img,
+            img: req.body.img,
             dob: req.body.dob,
             bio: req.body.bio,
             battingStyle: req.body.battingstyle,
@@ -69,7 +74,7 @@ export const createPlayer = async (req, res, next) => {
             role: req.body.role,
             batting: {
                 ...battingData,
-                average: parseFloat(battingAverage.toFixed(2)), 
+                average: parseFloat(battingAverage.toFixed(2)),
                 strikeRate: parseFloat(battingStrikeRate.toFixed(2)),
             },
             bowling: {
@@ -79,6 +84,9 @@ export const createPlayer = async (req, res, next) => {
                 strikeRate: parseFloat(bowlingStrikeRate.toFixed(2)),
             },
             fielding: fieldingData,
+            battingRank: 0, // Default batting rank (top-level)
+            bowlingRank: 0, // Default bowling rank (top-level)
+            allRounderRank: 0, // Default all-rounder rank (top-level)
         };
 
         // Save the player
@@ -90,7 +98,6 @@ export const createPlayer = async (req, res, next) => {
         next(err);
     }
 };
-
 
 
 

@@ -5,7 +5,7 @@ import { createPlayer,
         getPlayer, 
         getPlayers, 
         getPlayersByClub ,
-        filterPlayers
+        filterPlayers,
     } from "../controllers/player.js";
 import { verifyUser,verifyClubAdmin } from "../utils/verifyToken.js";
 
