@@ -15,6 +15,7 @@ const ClubSchema = new Schema({
         type: String,
     },
     players: [{ type: mongoose.Schema.Types.ObjectId, ref: "Player" }],
+    matches: [{ type: mongoose.Schema.Types.ObjectId, ref: "Match" }],
 }, { timestamps: true });
 
 export default mongoose.model("Club", ClubSchema);

@@ -5,7 +5,7 @@ import { verifyAdmin, verifyUser } from "../utils/verifyToken.js";
 const router = express.Router();
 
 router.post("/", verifyAdmin,createClub);
-router.put("/:id",verifyUser, updateClub);
+router.put("/:id", updateClub);
 router.delete("/:id",verifyAdmin, deleteClub);
 router.get("/:id", getClub);
 router.get("/", getClubs);

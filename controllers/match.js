@@ -1,13 +1,28 @@
 import Match from "../models/Match.js";
+import Club from "../models/Club.js";
 
 export const createMatch = async (req, res, next) => {
-    try {
-        const newMatch = new Match(req.body);
-        const savedMatch = await newMatch.save();
-        res.status(201).json(savedMatch);
-    } catch (err) {
-        next(err);
-    }
+  try {
+    const newMatch = new Match(req.body);
+    const savedMatch = await newMatch.save();
+
+    // Add the match to both clubs' matches array
+    await Club.findByIdAndUpdate(
+      req.body.club1.club,
+      { $push: { matches: savedMatch._id } },
+      { new: true }
+    );
+
+    await Club.findByIdAndUpdate(
+      req.body.club2.club,
+      { $push: { matches: savedMatch._id } },
+      { new: true }
+    );
+
+    res.status(201).json(savedMatch);
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const updateMatch = async (req, res, next) => {
@@ -50,21 +65,27 @@ export const getMatches = async (req, res, next) => {
 
 // Get matches by club
 export const getMatchesByClub = async (req, res, next) => {
-    const { clubId } = req.params; // Extract clubId from path parameters
+  const { clubId } = req.params; 
 
-    try {
-        const matches = await Match.find({
-            $or: [
-                { "club1.club": clubId },
-                { "club2.club": clubId }
-            ]
-        })
-        .populate("club1.club club2.club")
-        .populate("club1.players club2.players");
+  try {
+    // Find the club and populate the matches field
+    const club = await Club.findById(clubId)
+      .populate({
+        path: "matches",
+        populate: [
+          { path: "club1.club", model: "Club" },
+          { path: "club2.club", model: "Club" },
+          { path: "club1.players", model: "Player" },
+          { path: "club2.players", model: "Player" },
+        ],
+      });
 
-        res.status(200).json(matches);
-    } catch (err) {
-        next(err);
+    if (!club) {
+      return next(createError(404, "Club not found"));
     }
-};
 
+    res.status(200).json(club.matches);
+  } catch (err) {
+    next(err);
+  }
+};
