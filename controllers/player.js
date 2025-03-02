@@ -1,4 +1,5 @@
 import Player from "../models/Player.js";
+import Club from "../models/Club.js"; 
 
 export const createPlayer = async (req, res, next) => {
     try {
@@ -84,14 +85,23 @@ export const createPlayer = async (req, res, next) => {
                 strikeRate: parseFloat(bowlingStrikeRate.toFixed(2)),
             },
             fielding: fieldingData,
-            battingRank: 0, // Default batting rank (top-level)
-            bowlingRank: 0, // Default bowling rank (top-level)
-            allRounderRank: 0, // Default all-rounder rank (top-level)
+            battingRank: 0,
+            bowlingRank: 0, 
+            allRounderRank: 0, 
         };
 
         // Save the player
         const newPlayer = new Player(newPlayerData);
         const savedPlayer = await newPlayer.save();
+
+        // If the player is associated with a club, update the club's players array
+        if (req.body.club) {
+            await Club.findByIdAndUpdate(
+                req.body.club,
+                { $push: { players: savedPlayer._id } }, 
+                { new: true }
+            );
+        }
 
         res.status(201).json(savedPlayer);
     } catch (err) {
@@ -99,6 +109,117 @@ export const createPlayer = async (req, res, next) => {
     }
 };
 
+export const createPlayerByClub = async (req, res, next) => {
+    try {
+        const { user } = req; // Get the logged-in user from the request
+
+        if (!user.club) {
+            return next(createError(403, "You are not associated with any club."));
+        }
+
+        // Extract batting, bowling, and fielding data or set default empty objects
+        const batting = req.body.batting || {};
+        const bowling = req.body.bowling || {};
+        const fielding = req.body.fielding || {};
+
+        // Ensure all fields have default values if not provided
+        const battingData = {
+            matches: batting.matches || 0,
+            innings: batting.innings || 0,
+            runs: batting.runs || 0,
+            ballsFaced: batting.ballsFaced || 0,
+            highestScore: batting.highestScore || 0,
+            notOuts: batting.notOuts || 0,
+            average: 0, // Will be calculated
+            strikeRate: 0, // Will be calculated
+        };
+
+        const bowlingData = {
+            matches: bowling.matches || 0,
+            innings: bowling.innings || 0,
+            oversBowled: bowling.oversBowled || 0,
+            ballsBowled: bowling.ballsBowled || 0,
+            runsConceded: bowling.runsConceded || 0,
+            wickets: bowling.wickets || 0,
+            economy: 0, // Will be calculated
+            average: 0, // Will be calculated
+            strikeRate: 0, // Will be calculated
+        };
+
+        const fieldingData = {
+            matches: fielding.matches || 0,
+            catches: fielding.catches || 0,
+            runOuts: fielding.runOuts || 0,
+            stumpings: fielding.stumpings || 0,
+        };
+
+        // Calculate batting average and strike rate
+        const battingAverage =
+            battingData.innings && battingData.notOuts !== undefined
+                ? battingData.runs / (battingData.innings - battingData.notOuts || 1)
+                : 0;
+        const battingStrikeRate =
+            battingData.runs && battingData.ballsFaced
+                ? (battingData.runs * 100) / battingData.ballsFaced
+                : 0;
+
+        // Calculate bowling economy, average, and strike rate
+        const bowlingEconomy =
+            bowlingData.oversBowled
+                ? bowlingData.runsConceded / bowlingData.oversBowled
+                : 0;
+        const bowlingAverage =
+            bowlingData.wickets
+                ? bowlingData.runsConceded / bowlingData.wickets
+                : 0;
+        const bowlingStrikeRate =
+            bowlingData.wickets
+                ? (bowlingData.oversBowled * 6) / bowlingData.wickets
+                : 0;
+
+        // Create the new player data with calculations
+        const newPlayerData = {
+            name: req.body.name || "Unknown Player",
+            club: user.club, // Use the logged-in user's club
+            img: req.body.img,
+            dob: req.body.dob,
+            bio: req.body.bio,
+            battingStyle: req.body.battingstyle,
+            bowlingStyle: req.body.bowlingstyle,
+            role: req.body.role,
+            batting: {
+                ...battingData,
+                average: parseFloat(battingAverage.toFixed(2)),
+                strikeRate: parseFloat(battingStrikeRate.toFixed(2)),
+            },
+            bowling: {
+                ...bowlingData,
+                economy: parseFloat(bowlingEconomy.toFixed(2)),
+                average: parseFloat(bowlingAverage.toFixed(2)),
+                strikeRate: parseFloat(bowlingStrikeRate.toFixed(2)),
+            },
+            fielding: fieldingData,
+            battingRank: 0, 
+            bowlingRank: 0, 
+            allRounderRank: 0, 
+        };
+
+        // Save the player
+        const newPlayer = new Player(newPlayerData);
+        const savedPlayer = await newPlayer.save();
+
+        // Update the club's players array
+        await Club.findByIdAndUpdate(
+            user.club,
+            { $push: { players: savedPlayer._id } }, 
+            { new: true }
+        );
+
+        res.status(201).json(savedPlayer);
+    } catch (err) {
+        next(err);
+    }
+};
 
 
 export const updatePlayer = async (req, res, next) => {
@@ -187,12 +308,20 @@ export const getPlayers = async (req, res, next) => {
 };
 
 export const getPlayersByClub = async (req, res, next) => {
-    const { clubId } = req.params; // Extract clubId from path parameters
+    const { clubId } = req.params;
     try {
-        const players = await Player.find({ club: clubId }); // Query players by clubId
-        res.status(200).json(players); // Send players as response
+        // Find the club by ID
+        const club = await Club.findById(clubId).populate("players"); 
+        if (!club) {
+            return res.status(404).json({ message: "Club not found" });
+        }
+
+        // Extract the populated players
+        const players = club.players;
+
+        res.status(200).json(players); 
     } catch (err) {
-        next(err); // Pass error to middleware
+        next(err); 
     }
 };
 
