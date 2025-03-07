@@ -57,9 +57,8 @@ cron.schedule("0 0 * * *", async () => {
 });
 
 // Start Server
-app.listen(8000, () => {
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
     connectDB();
     console.log("Connected to backend!");
-    console.log("TEST_VARIABLE:", process.env.TEST_VARIABLE);
-
 });
