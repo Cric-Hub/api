@@ -5,7 +5,7 @@ import {
   getNewsById,
   updateNews,
   deleteNews,
-} from "../controllers/news.js";
+} from "../controllers/News.js";
 import { verifyToken, verifyAdmin, verifyUser } from "../utils/verifyToken.js";
 
 const router = express.Router();
