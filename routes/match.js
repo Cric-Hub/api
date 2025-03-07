@@ -1,6 +1,6 @@
 import express from "express";
 import { createMatch, updateMatch, deleteMatch, getMatch, getMatches,getMatchesByClub } from "../controllers/match.js";
-import { verifyUser } from "../utils/verifyToken.js";
+import { verifyAdmin,verifyClubAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
