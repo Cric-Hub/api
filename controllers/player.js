@@ -318,8 +318,7 @@ export const getPlayer = async (req, res, next) => {
 
 export const getPlayers = async (req, res, next) => {
     try {
-        const players = await Player.find()
-        .populate("club");
+        const players = await Player.find().populate("club");
         res.status(200).json(players);
     } catch (err) {
         next(err);
