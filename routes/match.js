@@ -5,10 +5,10 @@ import { verifyAdmin,verifyClubAdmin } from "../utils/verifyToken.js";
 const router = express.Router();
 
 router.get("/by-club/:clubId", getMatchesByClub);
-router.post("/",createMatch);        // Create a match
-router.put("/:id", updateMatch);     // Update a match
-router.delete("/:id", deleteMatch);  // Delete a match
-router.get("/:id", getMatch);        // Get a specific match
-router.get("/", getMatches);         // Get all matches
+router.post("/",createMatch);      
+router.put("/:id", updateMatch);     
+router.delete("/:id", deleteMatch);  
+router.get("/:id", getMatch);        
+router.get("/", getMatches);         
 
 export default router;

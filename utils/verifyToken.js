@@ -9,7 +9,7 @@ export const verifyToken = (req, res, next) => {
     }
     jwt.verify(token, process.env.JWT, (err, user) => {
         if (err) return next(createError(403, "Token is not valid"));
-        req.user = user; // Attach user info to request
+        req.user = user;
         next();
     });
 };
@@ -17,7 +17,7 @@ export const verifyToken = (req, res, next) => {
 // Middleware to verify admin
 export const verifyAdmin = (req, res, next) => {
     verifyToken(req, res, (err) => {
-        if (err) return next(err); // Handle error from verifyToken
+        if (err) return next(err);
         if (req.user && req.user.isAdmin) {
             return next();
         }
@@ -25,23 +25,18 @@ export const verifyAdmin = (req, res, next) => {
     });
 };
 
-
+// Middleware to verify clubAdmin
 export const verifyClubAdmin = (req, res, next) => {
     verifyToken(req, res, (err) => {
-        if (err) return next(err); // Handle token verification error
-
+        if (err) return next(err);
         if (req.user) {
-            // If user is an Admin (isAdmin === true), allow access
             if (req.user.isAdmin) {
                 return next();
             }
-
-            // If user is NOT an Admin (isAdmin === false), treat them as Club Admin
             if (req.user.isAdmin === false) {
                 return next();
             }
         }
-
         return next(createError(403, "You are not authorized"));
     });
 };

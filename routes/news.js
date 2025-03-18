@@ -10,10 +10,10 @@ import { verifyAdmin, verifyClubAdmin } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
-router.post("/",verifyAdmin, createNews); // Create news
-router.get("/", getAllNews); // Get all news
-router.get("/:id", getNewsById); // Get news by ID
-router.put("/:id",verifyAdmin, updateNews); // Update news
-router.delete("/:id",verifyAdmin, deleteNews); // Delete news
+router.post("/",verifyAdmin, createNews); 
+router.get("/", getAllNews); 
+router.get("/:id", getNewsById); 
+router.put("/:id",verifyAdmin, updateNews); 
+router.delete("/:id",verifyAdmin, deleteNews); 
 
 export default router;

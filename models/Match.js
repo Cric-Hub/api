@@ -19,8 +19,8 @@ const MatchSchema = new Schema({
     },
     overs: { type: Number, required: true },
     tossWinner: { type: mongoose.Schema.Types.ObjectId, ref: "Club", required: true },
-    tossChoice: { type: String, required: true }, // "Bat" or "Bowl"
-    status: { type: String, default: "Live" },    // "Live", "Completed", etc.
+    tossChoice: { type: String, required: true },
+    status: { type: String, default: "Live" },
     currentInnings: { type: String, enum: ["club1", "club2"], required: true },
 }, { timestamps: true });
 

@@ -16,8 +16,8 @@ export const createPlayer = async (req, res, next) => {
             ballsFaced: batting.ballsFaced || 0,
             highestScore: batting.highestScore || 0,
             notOuts: batting.notOuts || 0,
-            average: 0, // Will be calculated
-            strikeRate: 0, // Will be calculated
+            average: 0, 
+            strikeRate: 0, 
         };
 
         const bowlingData = {
@@ -27,9 +27,9 @@ export const createPlayer = async (req, res, next) => {
             ballsBowled: bowling.ballsBowled || 0,
             runsConceded: bowling.runsConceded || 0,
             wickets: bowling.wickets || 0,
-            economy: 0, // Will be calculated
-            average: 0, // Will be calculated
-            strikeRate: 0, // Will be calculated
+            economy: 0, 
+            average: 0, 
+            strikeRate: 0, 
         };
 
         const fieldingData = {
@@ -111,7 +111,7 @@ export const createPlayer = async (req, res, next) => {
 
 export const createPlayerByClub = async (req, res, next) => {
     try {
-        const { user } = req; // Get the logged-in user from the request
+        const { user } = req;
 
         if (!user.club) {
             return next(createError(403, "You are not associated with any club."));
@@ -130,8 +130,8 @@ export const createPlayerByClub = async (req, res, next) => {
             ballsFaced: batting.ballsFaced || 0,
             highestScore: batting.highestScore || 0,
             notOuts: batting.notOuts || 0,
-            average: 0, // Will be calculated
-            strikeRate: 0, // Will be calculated
+            average: 0, 
+            strikeRate: 0,
         };
 
         const bowlingData = {
@@ -141,9 +141,9 @@ export const createPlayerByClub = async (req, res, next) => {
             ballsBowled: bowling.ballsBowled || 0,
             runsConceded: bowling.runsConceded || 0,
             wickets: bowling.wickets || 0,
-            economy: 0, // Will be calculated
-            average: 0, // Will be calculated
-            strikeRate: 0, // Will be calculated
+            economy: 0, 
+            average: 0, 
+            strikeRate: 0,
         };
 
         const fieldingData = {
@@ -180,7 +180,7 @@ export const createPlayerByClub = async (req, res, next) => {
         // Create the new player data with calculations
         const newPlayerData = {
             name: req.body.name || "Unknown Player",
-            club: user.club, // Use the logged-in user's club
+            club: user.club, 
             img: req.body.img,
             dob: req.body.dob,
             bio: req.body.bio,
@@ -224,77 +224,64 @@ export const createPlayerByClub = async (req, res, next) => {
 
 export const updatePlayer = async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const updateData = {};
-  
-      // ✅ General Player Info Updates
-      const fieldsToUpdate = ["name", "dob", "bio", "role", "battingStyle", "bowlingStyle", "battingRank", "bowlingRank", "allRounderRank", "club", "img"];
-  
-      fieldsToUpdate.forEach((field) => {
-        if (req.body[field] !== undefined) {
-          updateData[field] = req.body[field];
-        }
-      });
-  
-      // ✅ Batting Updates
-      if (req.body.batting) {
-        const batting = req.body.batting;
-  
-        if (batting.runs || batting.innings || batting.notOuts) {
-          const innings = batting.innings || 1; // Prevent division by zero
-          const notOuts = batting.notOuts || 0;
-          const runs = batting.runs || 0;
-          const ballsFaced = batting.ballsFaced || 1;
-  
-          updateData["batting.average"] = runs / (innings - notOuts);
-          updateData["batting.strikeRate"] = (runs * 100) / ballsFaced;
-        }
-  
-        Object.keys(batting).forEach((key) => {
-          updateData[`batting.${key}`] = batting[key];
+        const { id } = req.params;
+        const updateData = {};
+        //General Player Info Updates
+        const fieldsToUpdate = ["name", "dob", "bio", "role", "battingStyle", "bowlingStyle", "battingRank", "bowlingRank", "allRounderRank", "club", "img"];
+        fieldsToUpdate.forEach((field) => {
+            if (req.body[field] !== undefined) {
+                updateData[field] = req.body[field];
+            }
         });
-      }
-  
-      // ✅ Bowling Updates
-      if (req.body.bowling) {
-        const bowling = req.body.bowling;
-  
-        if (bowling.runsConceded || bowling.ballsBowled || bowling.wickets) {
-          const ballsBowled = bowling.ballsBowled || 1; // Prevent division by zero
-          const runsConceded = bowling.runsConceded || 0;
-          const wickets = bowling.wickets || 1;
-  
-          updateData["bowling.economy"] = runsConceded / (ballsBowled / 6);
-          updateData["bowling.average"] = runsConceded / wickets;
-          updateData["bowling.strikeRate"] = ballsBowled / wickets;
+        // Batting Updates
+        if (req.body.batting) {
+            const batting = req.body.batting;
+            if (batting.runs || batting.innings || batting.notOuts) {
+                const innings = batting.innings || 1; 
+                const notOuts = batting.notOuts || 0;
+                const runs = batting.runs || 0;
+                const ballsFaced = batting.ballsFaced || 1;
+                updateData["batting.average"] = runs / (innings - notOuts);
+                updateData["batting.strikeRate"] = (runs * 100) / ballsFaced;
+            }
+            Object.keys(batting).forEach((key) => {
+                updateData[`batting.${key}`] = batting[key];
+            });
         }
-  
-        Object.keys(bowling).forEach((key) => {
-          updateData[`bowling.${key}`] = bowling[key];
-        });
-      }
-  
-      // ✅ Fielding Updates
-      if (req.body.fielding) {
-        Object.keys(req.body.fielding).forEach((key) => {
-          updateData[`fielding.${key}`] = req.body.fielding[key];
-        });
-      }
-  
-      // ✅ Update Player in Database
-      const updatedPlayer = await Player.findByIdAndUpdate(id, { $set: updateData }, { new: true });
-  
-      if (!updatedPlayer) {
-        return res.status(404).json({ message: "Player not found" });
-      }
-  
-      res.status(200).json({ message: "Player updated successfully", updatedPlayer });
+        // Bowling Updates
+        if (req.body.bowling) {
+            const bowling = req.body.bowling;
+            if (bowling.runsConceded || bowling.ballsBowled || bowling.wickets) {
+                const ballsBowled = bowling.ballsBowled || 1; // Prevent division by zero
+                const runsConceded = bowling.runsConceded || 0;
+                const wickets = bowling.wickets || 1;
+
+                updateData["bowling.economy"] = runsConceded / (ballsBowled / 6);
+                updateData["bowling.average"] = runsConceded / wickets;
+                updateData["bowling.strikeRate"] = ballsBowled / wickets;
+            }
+            Object.keys(bowling).forEach((key) => {
+                updateData[`bowling.${key}`] = bowling[key];
+            });
+        }
+        // Fielding Updates
+        if (req.body.fielding) {
+            Object.keys(req.body.fielding).forEach((key) => {
+                updateData[`fielding.${key}`] = req.body.fielding[key];
+            });
+        }
+        // Update Player in Database
+        const updatedPlayer = await Player.findByIdAndUpdate(id, { $set: updateData }, { new: true });
+        if (!updatedPlayer) {
+            return res.status(404).json({ message: "Player not found" });
+        }
+        res.status(200).json({ message: "Player updated successfully", updatedPlayer });
     } catch (error) {
-      console.error("Error updating player:", error);
-      res.status(500).json({ message: "Internal server error" });
+        console.error("Error updating player:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
-  };
-  
+};
+
 
 
 
@@ -328,15 +315,11 @@ export const getPlayers = async (req, res, next) => {
 export const getPlayersByClub = async (req, res, next) => {
     const { clubId } = req.params;
     try {
-        // Find the club by ID
         const club = await Club.findById(clubId).populate("players"); 
         if (!club) {
             return res.status(404).json({ message: "Club not found" });
         }
-
-        // Extract the populated players
         const players = club.players;
-
         res.status(200).json(players); 
     } catch (err) {
         next(err); 

@@ -18,8 +18,6 @@ const app = express();
 dotenv.config();
 
 //middlewares
-
-
 app.use(cors({
     origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
     credentials: true,

@@ -31,13 +31,13 @@ export const updateUser = async (req, res, next) => {
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             { $set: updates },
-            { new: true } // Return the updated document
+            { new: true } 
         );
 
         res.status(200).json(updatedUser);
     } catch (err) {
         console.error(err);
-        next(err); // Pass error to middleware
+        next(err);
     }
 };
 

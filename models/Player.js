@@ -66,15 +66,15 @@ const PlayerSchema = new Schema(
     },
     battingRank: {
       type: Number,
-      default: 0, // Batting rank (top-level)
+      default: 0,
     },
     bowlingRank: {
       type: Number,
-      default: 0, // Bowling rank (top-level)
+      default: 0,
     },
     allRounderRank: {
       type: Number,
-      default: 0, // All-rounder rank (top-level)
+      default: 0,
     },
     club: {
       type: mongoose.Schema.Types.ObjectId,

@@ -56,10 +56,10 @@ export const getMatches = async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 100;
     const matches = await Match.find()
-      .populate("club1.club") // Populate club1 club details
-      .populate("club2.club") // Populate club2 club details
-      .populate("tossWinner") // Populate tossWinner club details
-      .limit(limit); // Apply the limit after populating
+      .populate("club1.club") 
+      .populate("club2.club") 
+      .populate("tossWinner") 
+      .limit(limit); 
 
     res.status(200).json(matches);
   } catch (err) {

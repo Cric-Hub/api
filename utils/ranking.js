@@ -1,4 +1,3 @@
-// utils/rankings.js
 import Player from "../models/Player.js";
 
 const calculateRankings = async () => {
@@ -8,13 +7,13 @@ const calculateRankings = async () => {
         // Calculate batting rankings
         const sortedByBatting = [...players].sort((a, b) => b.batting.runs - a.batting.runs);
         sortedByBatting.forEach((player, index) => {
-            player.battingRank = index + 1; // Update top-level batting rank
+            player.battingRank = index + 1; 
         });
 
         // Calculate bowling rankings
         const sortedByBowling = [...players].sort((a, b) => b.bowling.wickets - a.bowling.wickets);
         sortedByBowling.forEach((player, index) => {
-            player.bowlingRank = index + 1; // Update top-level bowling rank
+            player.bowlingRank = index + 1; 
         });
 
         // Calculate all-rounder rankings
@@ -24,7 +23,7 @@ const calculateRankings = async () => {
             return bScore - aScore;
         });
         sortedByAllRounder.forEach((player, index) => {
-            player.allRounderRank = index + 1; // Update top-level all-rounder rank
+            player.allRounderRank = index + 1;
         });
 
         // Save updated rankings to the database
